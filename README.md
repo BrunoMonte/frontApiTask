@@ -1,59 +1,135 @@
-# TaskManagerFrontend
+#  Task Manager Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.11.
+Frontend da aplicação de gerenciamento de tarefas desenvolvido com Angular e TypeScript, consumindo uma API REST em .NET.
 
-## Development server
+---
 
-To start a local development server, run:
+#  Tecnologias utilizadas
+
+- Angular
+- TypeScript
+- HTML5
+- CSS3
+- Angular HttpClient
+
+---
+
+#  Funcionalidades
+
+- ✅ Criar tarefas
+- ✅ Listar tarefas
+- ✅ Editar tarefas
+- ✅ Excluir tarefas
+- ✅ Atualizar status da tarefa
+- ✅ Integração com API .NET
+
+---
+
+#  Pré-requisitos
+
+Antes de iniciar o projeto, você precisa ter instalado:
+
+- Node.js
+- Angular CLI
+- Git
+
+---
+
+#  Instalando Angular CLI
+
+Caso não tenha instalado:
+
+```bash
+npm install -g @angular/cli
+```
+
+---
+
+#  Clonando o repositório
+
+Via GitHub CLI:
+
+```bash
+gh repo clone BrunoMonte/task-manager-frontend
+```
+
+Ou via Git:
+
+```bash
+git clone https://github.com/BrunoMonte/task-manager-frontend.git
+```
+
+---
+
+#  Acesse a pasta do projeto
+
+```bash
+cd task-manager-frontend
+```
+
+---
+
+#  Instalando dependências
+
+```bash
+npm install
+```
+
+---
+
+#  Executando o projeto
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+#  Acessando aplicação
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Após iniciar o projeto, abra no navegador:
 
 ```bash
-ng generate --help
+http://localhost:4200
 ```
 
-## Building
+---
 
-To build the project run:
+# 🔗 Integração com API
+
+O frontend consome a API backend localmente através da rota:
 
 ```bash
-ng build
+http://localhost:5212/swagger/index.html
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+# 📌 Estrutura do projeto
 
 ```bash
-ng test
+src/
+ ├── app/
+ │   ├── components/
+ │   ├── services/
+ │   ├── models/
+ │   ├── app.ts
+ │   └── app.html
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+#  CRUD disponível
 
-```bash
-ng e2e
-```
+| Método | Funcionalidade |
+|---|---|
+| GET | Listar tarefas |
+| POST | Criar tarefa |
+| PUT | Atualizar tarefa |
+| DELETE | Excluir tarefa |
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
+#  Autor
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Desenvolvido por Bruno Monte 
