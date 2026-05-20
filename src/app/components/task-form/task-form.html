@@ -1,0 +1,34 @@
+<div class="form-container">
+
+  <h2>Criar tarefa</h2>
+
+  <form (ngSubmit)="createTarefa()">
+
+    <input
+      type="text"
+      placeholder="Título"
+      [(ngModel)]="tarefa.title"
+      name="title"
+    />
+
+    <textarea
+      placeholder="Descrição"
+      [(ngModel)]="tarefa.description"
+      name="description"
+    ></textarea>
+
+    <select
+      [(ngModel)]="tarefa.status"
+      name="status"
+    >
+      <option value="Pendente">Pendente</option>
+      <option value="Concluída">Concluída</option>
+    </select>
+
+    <button type="submit">
+      Criar tarefa
+    </button>
+
+  </form>
+
+</div>
