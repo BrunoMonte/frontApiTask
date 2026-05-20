@@ -1,0 +1,69 @@
+<div class="container">
+
+  <h1>Lista de Tarefas</h1>
+
+  <div *ngFor="let tarefa of tarefas" class="card">
+
+    <div *ngIf="editingId !== tarefa.id">
+
+      <h3>{{ tarefa.title }}</h3>
+
+      <p>{{ tarefa.description }}</p>
+
+      <strong>Status:</strong> {{ tarefa.status }}
+
+      <div class="actions">
+
+        <button (click)="editTask(tarefa)">
+          Editar
+        </button>
+
+        <button (click)="deleteTarefa(tarefa.id!)">
+          Excluir
+        </button>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="editingId === tarefa.id">
+
+      <input
+        [(ngModel)]="editedTask.title"
+        placeholder="Título"
+      />
+
+      <textarea
+        [(ngModel)]="editedTask.description"
+        placeholder="Descrição"
+      ></textarea>
+
+      <select [(ngModel)]="editedTask.status">
+
+        <option value="Pendente">
+          Pendente
+        </option>
+
+        <option value="Concluída">
+          Concluída
+        </option>
+
+      </select>
+
+      <div class="actions">
+
+        <button (click)="saveEdit()">
+          Salvar
+        </button>
+
+        <button (click)="cancelEdit()">
+          Cancelar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
