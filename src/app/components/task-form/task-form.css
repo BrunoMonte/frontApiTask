@@ -1,0 +1,21 @@
+.form-container {
+  width: 80%;
+  margin: 30px auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input,
+textarea,
+select {
+  padding: 12px;
+}
+
+button {
+  padding: 12px;
+  cursor: pointer;
+}
