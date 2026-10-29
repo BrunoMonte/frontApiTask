@@ -8,20 +8,18 @@ import { Tarefa } from '../../models/task';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './task-form.html',
-  styleUrls: ['./task-form.css']
+  styleUrls: ['./task-form.css'],
 })
 export class TaskForm {
-
   tarefa: Tarefa = {
     title: '',
     description: '',
-    status: 'Pendente'
+    status: 'Em Espera',
   };
 
   constructor(private tarefaService: TarefaService) {}
 
   createTarefa(): void {
-
     if (!this.tarefa.title.trim()) {
       alert('Título obrigatório');
       return;
@@ -29,13 +27,12 @@ export class TaskForm {
 
     this.tarefaService.createTarefa(this.tarefa).subscribe({
       next: () => {
-
         alert('Tarefa criada com sucesso');
 
         this.tarefa = {
           title: '',
           description: '',
-          status: 'Pendente'
+          status: 'Em Espera',
         };
 
         window.location.reload();
@@ -44,7 +41,7 @@ export class TaskForm {
       error: (err) => {
         console.error(err);
         alert('Erro ao criar tarefa');
-      }
+      },
     });
   }
 }
