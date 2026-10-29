@@ -1,34 +1,48 @@
 <div class="form-container">
-
-  <h2>Criar tarefa</h2>
+  <div class="form-header">
+    <div>
+      <h2>Nova tarefa</h2>
+      <p>Adicione uma tarefa ao seu quadro de trabalho.</p>
+    </div>
+    <span class="form-icon">+</span>
+  </div>
 
   <form (ngSubmit)="createTarefa()">
+    <div class="form-group">
+      <label for="title">Título da tarefa *</label>
+      <input
+        id="title"
+        type="text"
+        placeholder="Ex.: Implementar autenticação"
+        [(ngModel)]="tarefa.title"
+        name="title"
+        required
+      />
+    </div>
 
-    <input
-      type="text"
-      placeholder="Título"
-      [(ngModel)]="tarefa.title"
-      name="title"
-    />
+    <div class="form-group">
+      <label for="description">Descrição</label>
+      <textarea
+        id="description"
+        placeholder="Descreva o que precisa ser feito..."
+        [(ngModel)]="tarefa.description"
+        name="description"
+        rows="4"
+      ></textarea>
+    </div>
 
-    <textarea
-      placeholder="Descrição"
-      [(ngModel)]="tarefa.description"
-      name="description"
-    ></textarea>
+    <div class="form-group">
+      <label for="status">Status inicial</label>
+      <select id="status" [(ngModel)]="tarefa.status" name="status">
+        <option value="Em Espera">Em Espera</option>
+        <option value="Em Andamento">Em Andamento</option>
+        <option value="Em Teste">Em Teste</option>
+        <option value="Concluída">Concluída</option>
+      </select>
+    </div>
 
-    <select
-      [(ngModel)]="tarefa.status"
-      name="status"
-    >
-      <option value="Pendente">Pendente</option>
-      <option value="Concluída">Concluída</option>
-    </select>
-
-    <button type="submit">
-      Criar tarefa
-    </button>
-
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">+ Criar tarefa</button>
+    </div>
   </form>
-
 </div>

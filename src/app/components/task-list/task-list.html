@@ -1,69 +1,301 @@
-<div class="container">
-
-  <h1>Lista de Tarefas</h1>
-
-  <div *ngFor="let tarefa of tarefas" class="card">
-
-    <div *ngIf="editingId !== tarefa.id">
-
-      <h3>{{ tarefa.title }}</h3>
-
-      <p>{{ tarefa.description }}</p>
-
-      <strong>Status:</strong> {{ tarefa.status }}
-
-      <div class="actions">
-
-        <button (click)="editTask(tarefa)">
-          Editar
-        </button>
-
-        <button (click)="deleteTarefa(tarefa.id!)">
-          Excluir
-        </button>
-
-      </div>
-
+<div class="kanban-page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">GERENCIAMENTO DE PROJETO</span>
+      <h1>Quadro de tarefas</h1>
+      <p>Organize suas atividades e acompanhe o progresso.</p>
     </div>
 
-    <div *ngIf="editingId === tarefa.id">
+    <a class="new-task-button" routerLink="/new-task">
+      <span>+</span>
+      Nova tarefa
+    </a>
+  </header>
 
-      <input
-        [(ngModel)]="editedTask.title"
-        placeholder="Título"
-      />
-
-      <textarea
-        [(ngModel)]="editedTask.description"
-        placeholder="Descrição"
-      ></textarea>
-
-      <select [(ngModel)]="editedTask.status">
-
-        <option value="Pendente">
-          Pendente
-        </option>
-
-        <option value="Concluída">
-          Concluída
-        </option>
-
-      </select>
-
-      <div class="actions">
-
-        <button (click)="saveEdit()">
-          Salvar
-        </button>
-
-        <button (click)="cancelEdit()">
-          Cancelar
-        </button>
-
-      </div>
-
+  <section class="board-summary">
+    <div class="summary-item">
+      <span>Total de tarefas</span>
+      <strong>{{ tarefas.length }}</strong>
     </div>
 
-  </div>
+    <div class="summary-item">
+      <span>Em andamento</span>
+      <strong>{{ getTarefasPorStatus('Em Andamento').length }}</strong>
+    </div>
 
+    <div class="summary-item">
+      <span>Em teste</span>
+      <strong>{{ getTarefasPorStatus('Em Teste').length }}</strong>
+    </div>
+
+    <div class="summary-item">
+      <span>Concluídas</span>
+      <strong>{{ getTarefasPorStatus('Concluída').length }}</strong>
+    </div>
+  </section>
+
+  <main class="kanban-board">
+    <section class="kanban-column waiting">
+      <header class="column-header">
+        <div class="column-title">
+          <span class="status-dot"></span>
+          <h2>Em Espera</h2>
+        </div>
+        <span class="task-count">
+          {{ getTarefasPorStatus('Em Espera').length }}
+        </span>
+      </header>
+
+      <div class="column-content">
+        <article class="task-card" *ngFor="let tarefa of getTarefasPorStatus('Em Espera')">
+          <ng-container *ngIf="editingId !== tarefa.id; else editForm">
+            <div class="task-card-top">
+              <span class="task-label">TAREFA</span>
+              <button
+                type="button"
+                class="icon-button delete-button"
+                (click)="deleteTarefa(tarefa.id!)"
+                aria-label="Excluir tarefa"
+                title="Excluir tarefa"
+              >
+                ×
+              </button>
+            </div>
+
+            <h3>{{ tarefa.title }}</h3>
+            <p class="task-description">
+              {{ tarefa.description || 'Sem descrição informada.' }}
+            </p>
+
+            <div class="task-card-footer">
+              <span class="status-badge waiting-badge">Em Espera</span>
+              <button type="button" class="text-button" (click)="editTask(tarefa)">Editar</button>
+            </div>
+
+            <label class="move-label" [for]="'status-' + tarefa.id"> Mover para </label>
+            <select
+              class="move-select"
+              [id]="'status-' + tarefa.id"
+              [ngModel]="normalizeStatus(tarefa.status)"
+              (ngModelChange)="changeStatus(tarefa, $event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <option value="Em Espera">Em Espera</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Em Teste">Em Teste</option>
+              <option value="Concluída">Concluída</option>
+            </select>
+          </ng-container>
+
+          <ng-template #editForm>
+            <div class="edit-form">
+              <label>Título</label>
+              <input [(ngModel)]="editedTask.title" placeholder="Título da tarefa" />
+
+              <label>Descrição</label>
+              <textarea
+                [(ngModel)]="editedTask.description"
+                placeholder="Descrição da tarefa"
+                rows="3"
+              ></textarea>
+
+              <label>Status</label>
+              <select [(ngModel)]="editedTask.status">
+                <option value="Em Espera">Em Espera</option>
+                <option value="Em Andamento">Em Andamento</option>
+                <option value="Em Teste">Em Teste</option>
+                <option value="Concluída">Concluída</option>
+              </select>
+
+              <div class="edit-actions">
+                <button type="button" class="save-button" (click)="saveEdit()">Salvar</button>
+                <button type="button" class="cancel-button" (click)="cancelEdit()">Cancelar</button>
+              </div>
+            </div>
+          </ng-template>
+        </article>
+
+        <p class="empty-column" *ngIf="getTarefasPorStatus('Em Espera').length === 0">
+          Nenhuma tarefa aguardando.
+        </p>
+      </div>
+    </section>
+
+    <section class="kanban-column progress">
+      <header class="column-header">
+        <div class="column-title">
+          <span class="status-dot"></span>
+          <h2>Em Andamento</h2>
+        </div>
+        <span class="task-count">
+          {{ getTarefasPorStatus('Em Andamento').length }}
+        </span>
+      </header>
+
+      <div class="column-content">
+        <article class="task-card" *ngFor="let tarefa of getTarefasPorStatus('Em Andamento')">
+          <ng-container *ngIf="editingId !== tarefa.id">
+            <div class="task-card-top">
+              <span class="task-label">TAREFA</span>
+              <button
+                type="button"
+                class="icon-button delete-button"
+                (click)="deleteTarefa(tarefa.id!)"
+                aria-label="Excluir tarefa"
+                title="Excluir tarefa"
+              >
+                ×
+              </button>
+            </div>
+
+            <h3>{{ tarefa.title }}</h3>
+            <p class="task-description">
+              {{ tarefa.description || 'Sem descrição informada.' }}
+            </p>
+
+            <div class="task-card-footer">
+              <span class="status-badge progress-badge">Em Andamento</span>
+              <button type="button" class="text-button" (click)="editTask(tarefa)">Editar</button>
+            </div>
+
+            <label class="move-label" [for]="'status-' + tarefa.id"> Mover para </label>
+            <select
+              class="move-select"
+              [id]="'status-' + tarefa.id"
+              [ngModel]="normalizeStatus(tarefa.status)"
+              (ngModelChange)="changeStatus(tarefa, $event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <option value="Em Espera">Em Espera</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Em Teste">Em Teste</option>
+              <option value="Concluída">Concluída</option>
+            </select>
+          </ng-container>
+        </article>
+
+        <p class="empty-column" *ngIf="getTarefasPorStatus('Em Andamento').length === 0">
+          Nenhuma tarefa em andamento.
+        </p>
+      </div>
+    </section>
+
+    <section class="kanban-column testing">
+      <header class="column-header">
+        <div class="column-title">
+          <span class="status-dot"></span>
+          <h2>Em Teste</h2>
+        </div>
+        <span class="task-count">
+          {{ getTarefasPorStatus('Em Teste').length }}
+        </span>
+      </header>
+
+      <div class="column-content">
+        <article class="task-card" *ngFor="let tarefa of getTarefasPorStatus('Em Teste')">
+          <ng-container *ngIf="editingId !== tarefa.id">
+            <div class="task-card-top">
+              <span class="task-label">TAREFA</span>
+              <button
+                type="button"
+                class="icon-button delete-button"
+                (click)="deleteTarefa(tarefa.id!)"
+                aria-label="Excluir tarefa"
+                title="Excluir tarefa"
+              >
+                ×
+              </button>
+            </div>
+
+            <h3>{{ tarefa.title }}</h3>
+            <p class="task-description">
+              {{ tarefa.description || 'Sem descrição informada.' }}
+            </p>
+
+            <div class="task-card-footer">
+              <span class="status-badge testing-badge">Em Teste</span>
+              <button type="button" class="text-button" (click)="editTask(tarefa)">Editar</button>
+            </div>
+
+            <label class="move-label" [for]="'status-' + tarefa.id"> Mover para </label>
+            <select
+              class="move-select"
+              [id]="'status-' + tarefa.id"
+              [ngModel]="normalizeStatus(tarefa.status)"
+              (ngModelChange)="changeStatus(tarefa, $event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <option value="Em Espera">Em Espera</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Em Teste">Em Teste</option>
+              <option value="Concluída">Concluída</option>
+            </select>
+          </ng-container>
+        </article>
+
+        <p class="empty-column" *ngIf="getTarefasPorStatus('Em Teste').length === 0">
+          Nenhuma tarefa em teste.
+        </p>
+      </div>
+    </section>
+
+    <section class="kanban-column completed">
+      <header class="column-header">
+        <div class="column-title">
+          <span class="status-dot"></span>
+          <h2>Concluída</h2>
+        </div>
+        <span class="task-count">
+          {{ getTarefasPorStatus('Concluída').length }}
+        </span>
+      </header>
+
+      <div class="column-content">
+        <article class="task-card" *ngFor="let tarefa of getTarefasPorStatus('Concluída')">
+          <ng-container *ngIf="editingId !== tarefa.id">
+            <div class="task-card-top">
+              <span class="task-label">TAREFA</span>
+              <button
+                type="button"
+                class="icon-button delete-button"
+                (click)="deleteTarefa(tarefa.id!)"
+                aria-label="Excluir tarefa"
+                title="Excluir tarefa"
+              >
+                ×
+              </button>
+            </div>
+
+            <h3>{{ tarefa.title }}</h3>
+            <p class="task-description">
+              {{ tarefa.description || 'Sem descrição informada.' }}
+            </p>
+
+            <div class="task-card-footer">
+              <span class="status-badge completed-badge">Concluída</span>
+              <button type="button" class="text-button" (click)="editTask(tarefa)">Editar</button>
+            </div>
+
+            <label class="move-label" [for]="'status-' + tarefa.id"> Mover para </label>
+            <select
+              class="move-select"
+              [id]="'status-' + tarefa.id"
+              [ngModel]="normalizeStatus(tarefa.status)"
+              (ngModelChange)="changeStatus(tarefa, $event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+              <option value="Em Espera">Em Espera</option>
+              <option value="Em Andamento">Em Andamento</option>
+              <option value="Em Teste">Em Teste</option>
+              <option value="Concluída">Concluída</option>
+            </select>
+          </ng-container>
+        </article>
+
+        <p class="empty-column" *ngIf="getTarefasPorStatus('Concluída').length === 0">
+          Nenhuma tarefa concluída.
+        </p>
+      </div>
+    </section>
+  </main>
 </div>
