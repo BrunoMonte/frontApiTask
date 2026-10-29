@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,9 +12,10 @@ import { FormsModule } from '@angular/forms';
 export class Login {
   email = '';
   password = '';
-
   loading = false;
   errorMessage = '';
+
+  constructor(private router: Router) {}
 
   login(): void {
     this.errorMessage = '';
@@ -31,5 +33,7 @@ export class Login {
     // Login demonstrativo: ainda não autentica de verdade.
     console.log('E-mail informado:', this.email.trim());
     console.log('Solicitação de login validada no frontend.');
+
+    this.router.navigate(['/tasks']);
   }
 }
